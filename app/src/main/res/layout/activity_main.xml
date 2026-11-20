@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F6F9"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- SECCIÓN 1: INICIO DE SESIÓN (ISO 27000) -->
+        <LinearLayout
+            android:id="@+id/layoutLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:elevation="4dp"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Acceso Seguro - Tendedero IoT"
+                android:textColor="#1A237E"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Protegido bajo norma ISO/IEC 27000 (AES-256)"
+                android:textColor="#546E7A"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/etUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:hint="Usuario (ej. admin)"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/etPin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:minHeight="48dp"
+                android:hint="PIN de seguridad (ej. 123456)"
+                android:inputType="numberPassword" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#1A237E"
+                android:text="Autenticar e Ingresar"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/btnGoToRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#455A64"
+                android:text="Crear Nuevo Usuario"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- SECCIÓN 1B: REGISTRO SEGURO DE USUARIO -->
+        <LinearLayout
+            android:id="@+id/layoutRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:elevation="4dp"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Registrar Nuevo Usuario"
+                android:textColor="#1A237E"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Credenciales cifradas con SHA-256 + Salt único + AES-256"
+                android:textColor="#546E7A"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/etNewUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:hint="Nuevo usuario (3-20 letras/números)"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/etNewPin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:minHeight="48dp"
+                android:hint="Nuevo PIN (mínimo 6 dígitos)"
+                android:inputType="numberPassword" />
+
+            <EditText
+                android:id="@+id/etConfirmPin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:minHeight="48dp"
+                android:hint="Confirmar PIN"
+                android:inputType="numberPassword" />
+
+            <Button
+                android:id="@+id/btnSaveUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#2E7D32"
+                android:text="Guardar Usuario Protegido"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/btnCancelRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#78909C"
+                android:text="Volver al Inicio de Sesión"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- SECCIÓN 2: DASHBOARD IoT -->
+        <LinearLayout
+            android:id="@+id/layoutDashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Conexión Bluetooth Real -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:elevation="3dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvBtStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estado: Desconectado"
+                    android:textColor="#C62828"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnConnectBt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Conectar Dispositivo Bluetooth" />
+            </LinearLayout>
+
+            <!-- Telemetría en Tiempo Real -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#FFFFFF"
+                android:elevation="3dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monitoreo de Sensores y Actuadores"
+                    android:textColor="#1A237E"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvRainState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Sensor de Lluvia: Sin conexión"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvServoState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Servomotor (Tendedero): Sin conexión"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvBuzzerState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Bocina de Alerta: Apagada"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <!-- Controles Manuales y Modo -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#FFFFFF"
+                android:elevation="3dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Control del Tendedero"
+                    android:textColor="#1A237E"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnExtend"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#2E7D32"
+                        android:text="Extender Ropa"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btnRetract"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#1565C0"
+                        android:text="Entrar Ropa"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnAutoMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Activar Modo Automático (Sensor)" />
+
+                <Button
+                    android:id="@+id/btnMuteBuzzer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:backgroundTint="#EF6C00"
+                    android:text="Silenciar Bocina"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <!-- Bitácora de Auditoría -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#263238"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bitácora de Seguridad y Eventos"
+                    android:textColor="#80CBC4"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvAuditLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="monospace"
+                    android:textColor="#ECEFF1"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#B71C1C"
+                android:text="Cerrar Sesión Segura"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
