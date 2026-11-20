@@ -29,12 +29,12 @@ class SecurityManager(context: Context) {
     private val maxAttempts = 3
 
     init {
-        // Crea el usuario administrador por defecto si aún no existe
+        // Crea el usuario administrador por defecto con contraseña robusta si aún no existe
         if (!securePrefs.contains("user_admin_hash")) {
             val salt = generateRandomBase64(16)
             securePrefs.edit()
                 .putString("user_admin_salt", salt)
-                .putString("user_admin_hash", hashSHA256WithSalt("123456", salt))
+                .putString("user_admin_hash", hashSHA256WithSalt("Admin@1234", salt))
                 .apply()
         }
 
@@ -62,46 +62,63 @@ class SecurityManager(context: Context) {
         return bytes.joinToString("") { "%02x".format(it) }
     }
 
-    // --- REGISTRO SEGURO DE NUEVOS USUARIOS (ISO 27000) ---
+    // --- REGISTRO SEGURO DE NUEVOS USUARIOS CON CONTRASEÑA ROBUSTA (ISO 27000) ---
 
-    fun registerUser(rawUser: String, rawPin: String, confirmPin: String): Pair<Boolean, String> {
+    fun registerUser(rawUser: String, rawPassword: String, confirmPassword: String): Pair<Boolean, String> {
         val cleanUser = rawUser.trim().lowercase()
-        val cleanPin = rawPin.trim()
-        val cleanConfirm = confirmPin.trim()
 
-        // 1. Validación de formato de usuario (previene caracteres maliciosos)
+        // 1. Validación de formato de usuario
         if (!Regex("^[a-z0-9_]{3,20}$").matches(cleanUser)) {
             return Pair(false, "El usuario debe tener entre 3 y 20 caracteres (solo letras, números o '_').")
         }
 
-        // 2. Validación de política de robustez de PIN
-        if (!Regex("^\\d{6,12}$").matches(cleanPin)) {
-            return Pair(false, "El PIN debe contener entre 6 y 12 dígitos numéricos.")
+        // 2. Validación de longitud y ausencia de espacios
+        if (rawPassword.length < 8 || rawPassword.length > 32) {
+            return Pair(false, "La contraseña debe tener entre 8 y 32 caracteres.")
         }
 
-        if (cleanPin.toSet().size == 1) {
-            return Pair(false, "Por seguridad ISO 27000, el PIN no puede tener todos los dígitos iguales.")
+        if (rawPassword.contains(" ")) {
+            return Pair(false, "La contraseña no puede contener espacios en blanco.")
         }
 
-        if (cleanPin != cleanConfirm) {
-            return Pair(false, "Los PIN ingresados no coinciden.")
+        // 3. Validación de complejidad criptográfica (Mayúscula, minúscula, número y símbolo)
+        val hasUppercase = Regex(".*[A-Z].*").matches(rawPassword)
+        val hasLowercase = Regex(".*[a-z].*").matches(rawPassword)
+        val hasDigit = Regex(".*\\d.*").matches(rawPassword)
+        val hasSpecial = Regex(".*[^A-Za-z0-9\\s].*").matches(rawPassword)
+
+        if (!hasUppercase || !hasLowercase || !hasDigit || !hasSpecial) {
+            return Pair(
+                false,
+                "Contraseña débil: debe incluir al menos 1 mayúscula, 1 minúscula, 1 número y 1 símbolo especial (@, #, $, %, etc.)."
+            )
         }
 
-        // 3. Verificar que el usuario no exista previamente
+        // 4. Evitar que la contraseña contenga el nombre de usuario
+        if (rawPassword.lowercase().contains(cleanUser)) {
+            return Pair(false, "Por seguridad, la contraseña no puede contener el nombre de usuario.")
+        }
+
+        // 5. Confirmación de coincidencia
+        if (rawPassword != confirmPassword) {
+            return Pair(false, "Las contraseñas ingresadas no coinciden.")
+        }
+
+        // 6. Verificar que el usuario no exista previamente
         if (securePrefs.contains("user_${cleanUser}_hash")) {
             return Pair(false, "El usuario '$cleanUser' ya se encuentra registrado.")
         }
 
-        // 4. Generar Salt único y cifrar credenciales con SHA-256 + AES-256
+        // 7. Generar Salt único y almacenar hash SHA-256 en bóveda cifrada AES-256
         val uniqueSalt = generateRandomBase64(16)
-        val hashedPin = hashSHA256WithSalt(cleanPin, uniqueSalt)
+        val hashedPassword = hashSHA256WithSalt(rawPassword, uniqueSalt)
 
         securePrefs.edit()
             .putString("user_${cleanUser}_salt", uniqueSalt)
-            .putString("user_${cleanUser}_hash", hashedPin)
+            .putString("user_${cleanUser}_hash", hashedPassword)
             .apply()
 
-        return Pair(true, "Usuario '$cleanUser' creado y cifrado con éxito (SHA-256 + Salt).")
+        return Pair(true, "Usuario '$cleanUser' registrado con contraseña segura y cifrado AES-256.")
     }
 
     // --- DEFENSA CONTRA FUERZA BRUTA PERSISTENTE ---
@@ -119,18 +136,16 @@ class SecurityManager(context: Context) {
         return (maxAttempts - failed).coerceAtLeast(0)
     }
 
-    fun authenticate(user: String, pin: String): Boolean {
+    fun authenticate(user: String, password: String): Boolean {
         if (isLockedOut()) return false
 
         val cleanUser = user.trim().lowercase()
-        val cleanPin = pin.trim()
 
         val storedSalt = securePrefs.getString("user_${cleanUser}_salt", null)
         val storedHash = securePrefs.getString("user_${cleanUser}_hash", null)
 
-        // Ejecuta el hash incluso si el usuario no existe para evitar ataques de tiempo
         val saltToUse = storedSalt ?: "dummy_salt_protection_iso27000"
-        val inputHash = hashSHA256WithSalt(cleanPin, saltToUse)
+        val inputHash = hashSHA256WithSalt(password, saltToUse)
 
         return if (storedHash != null && inputHash == storedHash) {
             securePrefs.edit()
