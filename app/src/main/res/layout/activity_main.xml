@@ -50,8 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:minHeight="48dp"
-                android:hint="Contraseña (ej. Admin@1234)"
-                android:inputType="textPassword" />
+                android:hint="PIN de seguridad (ej. 123456)"
+                android:inputType="numberPassword" />
 
             <Button
                 android:id="@+id/btnLogin"
@@ -94,7 +94,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 android:text="Credenciales cifradas con SHA-256 + Salt único + AES-256"
                 android:textColor="#546E7A"
                 android:textSize="12sp" />
@@ -113,8 +113,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:minHeight="48dp"
-                android:hint="Contraseña segura (mín. 8 caracteres)"
-                android:inputType="textPassword" />
+                android:hint="Nuevo PIN (mínimo 6 dígitos)"
+                android:inputType="numberPassword" />
 
             <EditText
                 android:id="@+id/etConfirmPin"
@@ -122,18 +122,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:minHeight="48dp"
-                android:hint="Confirmar contraseña"
-                android:inputType="textPassword" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="#ECEFF1"
-                android:padding="8dp"
-                android:text="Requisitos ISO 27000: Mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 símbolo (@, #, $, %, etc.)."
-                android:textColor="#37474F"
-                android:textSize="11sp" />
+                android:hint="Confirmar PIN"
+                android:inputType="numberPassword" />
 
             <Button
                 android:id="@+id/btnSaveUser"

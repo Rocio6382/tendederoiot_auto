@@ -103,34 +103,34 @@ class MainActivity : AppCompatActivity() {
         tvAuditLog = findViewById(R.id.tvAuditLog)
 
         val etUser = findViewById<EditText>(R.id.etUser)
-        val etPassword = findViewById<EditText>(R.id.etPin)
+        val etPin = findViewById<EditText>(R.id.etPin)
 
         val etNewUser = findViewById<EditText>(R.id.etNewUser)
-        val etNewPassword = findViewById<EditText>(R.id.etNewPin)
-        val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPin)
+        val etNewPin = findViewById<EditText>(R.id.etNewPin)
+        val etConfirmPin = findViewById<EditText>(R.id.etConfirmPin)
 
         // Navegación entre Login y Registro
         findViewById<Button>(R.id.btnGoToRegister).setOnClickListener {
-            etPassword.text.clear()
+            etPin.text.clear()
             layoutLogin.visibility = View.GONE
             layoutRegister.visibility = View.VISIBLE
         }
 
         findViewById<Button>(R.id.btnCancelRegister).setOnClickListener {
             etNewUser.text.clear()
-            etNewPassword.text.clear()
-            etConfirmPassword.text.clear()
+            etNewPin.text.clear()
+            etConfirmPin.text.clear()
             layoutRegister.visibility = View.GONE
             layoutLogin.visibility = View.VISIBLE
         }
 
-        // Registro de usuario con política de contraseña robusta ISO 27000
+        // Registro de usuario con cifrado ISO 27000
         findViewById<Button>(R.id.btnSaveUser).setOnClickListener {
             val newUserText = etNewUser.text.toString()
             val (success, message) = securityManager.registerUser(
                 rawUser = newUserText,
-                rawPassword = etNewPassword.text.toString(),
-                confirmPassword = etConfirmPassword.text.toString()
+                rawPin = etNewPin.text.toString(),
+                confirmPin = etConfirmPin.text.toString()
             )
 
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -141,8 +141,8 @@ class MainActivity : AppCompatActivity() {
 
                 etUser.setText(newUserText.trim().lowercase())
                 etNewUser.text.clear()
-                etNewPassword.text.clear()
-                etConfirmPassword.text.clear()
+                etNewPin.text.clear()
+                etConfirmPin.text.clear()
 
                 layoutRegister.visibility = View.GONE
                 layoutLogin.visibility = View.VISIBLE
@@ -162,8 +162,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             val loggedUser = etUser.text.toString().trim().lowercase()
-            if (securityManager.authenticate(loggedUser, etPassword.text.toString())) {
-                etPassword.text.clear()
+            if (securityManager.authenticate(loggedUser, etPin.text.toString())) {
+                etPin.text.clear()
                 btController.disconnect(notify = true)
                 layoutLogin.visibility = View.GONE
                 layoutDashboard.visibility = View.VISIBLE
@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 appendLog("AUTH -> Sesión iniciada por '$loggedUser' (SHA-256 + Salt + AES-256)")
             } else {
-                etPassword.text.clear()
+                etPin.text.clear()
                 val newLockout = securityManager.getRemainingLockoutSeconds()
                 if (newLockout > 0) {
                     Toast.makeText(
